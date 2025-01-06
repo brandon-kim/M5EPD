@@ -37,6 +37,7 @@ void M5EPD::begin(bool touchEnable, bool SDEnable, bool SerialEnable,
     pinMode(M5EPD_KEY_RIGHT_PIN, INPUT);
     pinMode(M5EPD_KEY_PUSH_PIN, INPUT);
     pinMode(M5EPD_KEY_LEFT_PIN, INPUT);
+    pinMode(M5EPD_CARD_CD_PIN,  INPUT);
     delay(100);
 
     enableEXTPower();
@@ -47,16 +48,16 @@ void M5EPD::begin(bool touchEnable, bool SDEnable, bool SerialEnable,
               M5EPD_BUSY_PIN);
 
     if (SDEnable == true) {
-        SPI.begin(14, 13, 12, 4);
+        SPI.begin(M5EPD_SCK_PIN, M5EPD_MISO_PIN, M5EPD_MOSI_PIN, M5EPD_SD_CS_PIN);
         SD.begin(4, SPI, 20000000);
     }
 
     if (touchEnable == true) {
-        if (TP.begin(21, 22, 36) != ESP_OK) {
+        if (TP.begin( M5EPD_I2C_SDA_PIN, M5EPD_I2C_SCL_PIN, M5EPD_TOUCH_ISR_PIN) != ESP_OK) {
             log_e("Touch pad initialization failed.");
         }
     } else if (I2CEnable == true) {
-        Wire.begin(21, 22, (uint32_t)400000U);
+        Wire.begin( M5EPD_I2C_SDA_PIN, M5EPD_I2C_SCL_PIN, (uint32_t)400000U);
     }
 
     if (BatteryADCEnable == true) {
@@ -76,10 +77,10 @@ void M5EPD::BatteryADCBegin() {
     }
     _is_adc_start = true;
     adc1_config_width(ADC_WIDTH_BIT_12);
-    adc1_config_channel_atten(BAT_ADC_CHANNEL, ADC_ATTEN_DB_11);
+    adc1_config_channel_atten(BAT_ADC_CHANNEL, ADC_ATTEN_DB_12);
     _adc_chars = (esp_adc_cal_characteristics_t *)calloc(
         1, sizeof(esp_adc_cal_characteristics_t));
-    esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12,
+    esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_12, ADC_WIDTH_BIT_12,
                              BASE_VOLATAGE, _adc_chars);
 }
 

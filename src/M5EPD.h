@@ -16,24 +16,29 @@
 
 #include "esp_adc_cal.h"
 
-#define M5EPD_MAIN_PWR_PIN   2
-#define M5EPD_CS_PIN         15
-#define M5EPD_SCK_PIN        14
-#define M5EPD_MOSI_PIN       12
-#define M5EPD_BUSY_PIN       27
-#define M5EPD_MISO_PIN       13
-#define M5EPD_EXT_PWR_EN_PIN 5
-#define M5EPD_EPD_PWR_EN_PIN 23
-#define M5EPD_KEY_RIGHT_PIN  39
-#define M5EPD_KEY_PUSH_PIN   38
-#define M5EPD_KEY_LEFT_PIN   37
-#define M5EPD_BAT_VOL_PIN    35
-#define M5EPD_PORTC_W_PIN    19
-#define M5EPD_PORTC_Y_PIN    18
-#define M5EPD_PORTB_W_PIN    33
-#define M5EPD_PORTB_Y_PIN    26
-#define M5EPD_PORTA_W_PIN    32
-#define M5EPD_PORTA_Y_PIN    25
+#define M5EPD_MAIN_PWR_PIN   GPIO_NUM_2
+#define M5EPD_CS_PIN         GPIO_NUM_15
+#define M5EPD_SCK_PIN        GPIO_NUM_14
+#define M5EPD_MOSI_PIN       GPIO_NUM_12
+#define M5EPD_BUSY_PIN       GPIO_NUM_27
+#define M5EPD_MISO_PIN       GPIO_NUM_13
+#define M5EPD_EXT_PWR_EN_PIN GPIO_NUM_5
+#define M5EPD_EPD_PWR_EN_PIN GPIO_NUM_23
+#define M5EPD_KEY_RIGHT_PIN  GPIO_NUM_39
+#define M5EPD_KEY_PUSH_PIN   GPIO_NUM_38
+#define M5EPD_KEY_LEFT_PIN   GPIO_NUM_37
+#define M5EPD_BAT_VOL_PIN    GPIO_NUM_35
+#define M5EPD_PORTC_W_PIN    GPIO_NUM_19
+#define M5EPD_PORTC_Y_PIN    GPIO_NUM_18
+#define M5EPD_PORTB_W_PIN    GPIO_NUM_33
+#define M5EPD_PORTB_Y_PIN    GPIO_NUM_26
+#define M5EPD_PORTA_W_PIN    GPIO_NUM_32
+#define M5EPD_PORTA_Y_PIN    GPIO_NUM_25
+#define M5EPD_SD_CS_PIN      GPIO_NUM_4
+#define M5EPD_CARD_CD_PIN    GPIO_NUM_34
+#define M5EPD_TOUCH_ISR_PIN  GPIO_NUM_36
+#define M5EPD_I2C_SDA_PIN    GPIO_NUM_21
+#define M5EPD_I2C_SCL_PIN    GPIO_NUM_22
 
 class M5EPD {
    public:
