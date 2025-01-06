@@ -160,10 +160,7 @@ class TFT_eSprite : public TFT_eSPI {
 
     boolean _iswapBytes;  // Swap the byte order for Sprite pushImage()
 
-    int32_t _iwidth, _iheight;  // Sprite memory image bit width and height
-                                // (swapped during rotations)
-    int32_t _dwidth,
-        _dheight;       // Real display width and height (for <8bpp Sprites)
-    int32_t _bitwidth;  // Sprite image bit width for drawPixel (for <8bpp
-                        // Sprites, not swapped)
+    int32_t _iwidth, _iheight;  // Sprite memory image bit width and height (swapped during rotations)
+    int32_t _dwidth, _dheight;  // Real display width and height (for <8bpp Sprites)
+    int32_t _bitwidth;  // Sprite image bit width for drawPixel (for <8bpp Sprites, not swapped)
 };

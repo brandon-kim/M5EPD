@@ -1,24 +1,21 @@
 /**************************************************************************************
-// The following class creates Sprites in RAM, graphics can then be drawn in the
-Sprite
-// and rendered quickly onto the TFT screen. The class inherits the graphics
-functions
-// from the TFT_eSPI class. Some functions are overridden by this class so that
-the
+// The following class creates Sprites in RAM, graphics can then be drawn in the Sprite
+// and rendered quickly onto the TFT screen. The class inherits the graphics functions
+// from the TFT_eSPI class. Some functions are overridden by this class so that the
 // graphics are written to the Sprite rather than the TFT.
 // Coded by Bodmer, see license file in root folder
 ***************************************************************************************/
 /***************************************************************************************
-// Color bytes are swapped when writing to RAM, this introduces a small overhead
-but
+// Color bytes are swapped when writing to RAM, this introduces a small overhead but
 // there is a nett performance gain by using swapped bytes.
 ***************************************************************************************/
 #include "Sprite.h"
 /***************************************************************************************
 ** Function name:           TFT_eSprite
 ** Description:             Class constructor
-*************************************************************************************x*/
-TFT_eSprite::TFT_eSprite(TFT_eSPI *tft) {
+***************************************************************************************/
+TFT_eSprite::TFT_eSprite(TFT_eSPI *tft) 
+{
     _tft = tft;  // Pointer to tft class so we can call member functions
 
     _iwidth  = 0;  // Initialise width and height to 0 (it does not exist yet)
@@ -47,7 +44,8 @@ TFT_eSprite::TFT_eSprite(TFT_eSPI *tft) {
 ** Description:             Create a sprite (bitmap) of defined width and height
 *************************************************************************************x*/
 // cast returned value to (uint8_t*) for 8 bit or (uint16_t*) for 16 bit colours
-void *TFT_eSprite::createSprite(int16_t w, int16_t h, uint8_t frames) {
+void *TFT_eSprite::createSprite(int16_t w, int16_t h, uint8_t frames) 
+{
     if (_created) return _img8_1;
 
     if (w < 1 || h < 1) return NULL;
@@ -103,7 +101,8 @@ void *TFT_eSprite::createSprite(int16_t w, int16_t h, uint8_t frames) {
 *pointer
 *************************************************************************************x*/
 
-void *TFT_eSprite::callocSprite(int16_t w, int16_t h, uint8_t frames) {
+void *TFT_eSprite::callocSprite(int16_t w, int16_t h, uint8_t frames) 
+{
     // Add one extra "off screen" pixel to point out-of-bounds setWindow()
     // coordinates this means push/writeColor functions do not need additional
     // bounds checks and hence will run faster in normal circumstances.
@@ -160,7 +159,8 @@ void *TFT_eSprite::callocSprite(int16_t w, int16_t h, uint8_t frames) {
 *graphics
 *************************************************************************************x*/
 // Frames are numbered 1 and 2
-void *TFT_eSprite::frameBuffer(int8_t f) {
+void *TFT_eSprite::frameBuffer(int8_t f) 
+{
     if (!_created) return NULL;
 
     if (_bpp == 16) return _img;
@@ -178,9 +178,9 @@ void *TFT_eSprite::frameBuffer(int8_t f) {
 /***************************************************************************************
 ** Function name:           setColorDepth
 ** Description:             Set bits per pixel for colour (1, 8 or 16)
-*************************************************************************************x*/
-
-void *TFT_eSprite::setColorDepth(int8_t b) {
+***************************************************************************************/
+void *TFT_eSprite::setColorDepth(int8_t b) 
+{
     // Can't change an existing sprite's colour depth so delete it
     if (_created) free(_img8_1);
 
@@ -204,9 +204,9 @@ void *TFT_eSprite::setColorDepth(int8_t b) {
 /***************************************************************************************
 ** Function name:           getColorDepth
 ** Description:             Get bits per pixel for colour (1, 8 or 16)
-*************************************************************************************x*/
-
-int8_t TFT_eSprite::getColorDepth(void) {
+***************************************************************************************/
+int8_t TFT_eSprite::getColorDepth(void) 
+{
     if (_created)
         return _bpp;
     else
@@ -217,7 +217,8 @@ int8_t TFT_eSprite::getColorDepth(void) {
 ** Function name:           setBitmapColor
 ** Description:             Set the foreground foreground and background colour
 ***************************************************************************************/
-void TFT_eSprite::setBitmapColor(uint16_t c, uint16_t b) {
+void TFT_eSprite::setBitmapColor(uint16_t c, uint16_t b) 
+{
     if (c == b) b = ~c;
     _tft->bitmap_fg = c;
     _tft->bitmap_bg = b;
@@ -226,8 +227,9 @@ void TFT_eSprite::setBitmapColor(uint16_t c, uint16_t b) {
 /***************************************************************************************
 ** Function name:           deleteSprite
 ** Description:             Delete the sprite to free up memory (RAM)
-*************************************************************************************x*/
-void TFT_eSprite::deleteSprite(void) {
+***************************************************************************************/
+void TFT_eSprite::deleteSprite(void) 
+{
     if (!_created) return;
 
     free(_img8_1);
@@ -238,8 +240,9 @@ void TFT_eSprite::deleteSprite(void) {
 /***************************************************************************************
 ** Function name:           setPivot
 ** Description:             Set the pivot point in this Sprite
-*************************************************************************************x*/
-void TFT_eSprite::setPivot(int16_t x, int16_t y) {
+***************************************************************************************/
+void TFT_eSprite::setPivot(int16_t x, int16_t y) 
+{
     _xpivot = x;
     _ypivot = y;
 }
@@ -248,7 +251,8 @@ void TFT_eSprite::setPivot(int16_t x, int16_t y) {
 ** Function name:           getPivotX
 ** Description:             Get the x pivot position
 ***************************************************************************************/
-int16_t TFT_eSprite::getPivotX(void) {
+int16_t TFT_eSprite::getPivotX(void) 
+{
     return _xpivot;
 }
 
@@ -256,14 +260,15 @@ int16_t TFT_eSprite::getPivotX(void) {
 ** Function name:           getPivotY
 ** Description:             Get the y pivot position
 ***************************************************************************************/
-int16_t TFT_eSprite::getPivotY(void) {
+int16_t TFT_eSprite::getPivotY(void) 
+{
     return _ypivot;
 }
 
 /***************************************************************************************
 ** Function name:           pushRotated
 ** Description:             Push a rotated copy of the Sprite to TFT screen
-*************************************************************************************x*/
+***************************************************************************************/
 bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp) {
     if (!_created) return false;
 
@@ -340,8 +345,9 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp) {
 /***************************************************************************************
 ** Function name:           pushRotated
 ** Description:             Push a rotated copy of the Sprite to another Sprite
-*************************************************************************************x*/
-bool TFT_eSprite::pushRotated(TFT_eSprite *spr, int16_t angle, int32_t transp) {
+***************************************************************************************/
+bool TFT_eSprite::pushRotated(TFT_eSprite *spr, int16_t angle, int32_t transp) 
+{
     if (!_created) return false;       // Check this Sprite is created
     if (!spr->_created) return false;  // Ckeck destination Sprite is created
 
@@ -414,7 +420,7 @@ bool TFT_eSprite::pushRotated(TFT_eSprite *spr, int16_t angle, int32_t transp) {
 /***************************************************************************************
 ** Function name:           rotatedBounds
 ** Description:             Get bounding box of a rotated Sprite wrt pivot
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::getRotatedBounds(float sina, float cosa, int16_t w, int16_t h,
                                    int16_t xp, int16_t yp, int16_t *min_x,
                                    int16_t *min_y, int16_t *max_x,
@@ -460,7 +466,7 @@ void TFT_eSprite::getRotatedBounds(float sina, float cosa, int16_t w, int16_t h,
 /***************************************************************************************
 ** Function name:           pushSprite
 ** Description:             Push the sprite to the TFT at x, y
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::pushSprite(int32_t x, int32_t y) {
     if (!_created) return;
 
@@ -479,7 +485,7 @@ void TFT_eSprite::pushSprite(int32_t x, int32_t y) {
 ** Function name:           pushSprite
 ** Description:             Push the sprite to the TFT at x, y with transparent
 *colour
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::pushSprite(int32_t x, int32_t y, uint16_t transp) {
     if (!_created) return;
 
@@ -500,7 +506,7 @@ void TFT_eSprite::pushSprite(int32_t x, int32_t y, uint16_t transp) {
 /***************************************************************************************
 ** Function name:           readPixel
 ** Description:             Read 565 colour of a pixel at defined coordinates
-*************************************************************************************x*/
+***************************************************************************************/
 uint16_t TFT_eSprite::readPixel(int32_t x, int32_t y) {
     if ((x < 0) || (x >= _iwidth) || (y < 0) || (y >= _iheight) || !_created)
         return 0;
@@ -543,7 +549,7 @@ uint16_t TFT_eSprite::readPixel(int32_t x, int32_t y) {
 ** Function name:           pushImage
 ** Description:             push 565 colour image into a defined area of a
 *sprite
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::pushImage(int32_t x, int32_t y, int32_t w, int32_t h,
                             uint16_t *data) {
     if ((x >= _iwidth) || (y >= _iheight) || (w == 0) || (h == 0) || !_created)
@@ -635,7 +641,7 @@ void TFT_eSprite::pushImage(int32_t x, int32_t y, int32_t w, int32_t h,
 ** Function name:           pushImage
 ** Description:             push 565 colour FLASH (PROGMEM) image into a defined
 *area
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::pushImage(int32_t x, int32_t y, int32_t w, int32_t h,
                             const uint16_t *data) {
 #ifdef ESP32
@@ -751,7 +757,7 @@ bool TFT_eSprite::getSwapBytes(void) {
 ** Function name:           setWindow
 ** Description:             Set the bounds of a window for pushColor and
 *writeColor
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::setWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
     if (x0 > x1) swap_coord(x0, x1);
     if (y0 > y1) swap_coord(y0, y1);
@@ -781,7 +787,7 @@ void TFT_eSprite::setWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
 /***************************************************************************************
 ** Function name:           pushColor
 ** Description:             Send a new pixel to the set window
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::pushColor(uint32_t color) {
     if (!_created) return;
 
@@ -811,7 +817,7 @@ void TFT_eSprite::pushColor(uint32_t color) {
 /***************************************************************************************
 ** Function name:           pushColor
 ** Description:             Send a "len" new pixels to the set window
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::pushColor(uint32_t color, uint16_t len) {
     if (!_created) return;
 
@@ -834,7 +840,7 @@ void TFT_eSprite::pushColor(uint32_t color, uint16_t len) {
 ** Function name:           writeColor
 ** Description:             Write a pixel with pre-formatted colour to the set
 *window
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::writeColor(uint16_t color) {
     if (!_created) return;
 
@@ -863,7 +869,7 @@ void TFT_eSprite::writeColor(uint16_t color) {
 ** Function name:           setScrollRect
 ** Description:             Set scroll area within the sprite and the gap fill
 *colour
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::setScrollRect(int32_t x, int32_t y, int32_t w, int32_t h,
                                 uint16_t color) {
     if ((x >= _iwidth) || (y >= _iheight) || !_created) return;
@@ -894,7 +900,7 @@ void TFT_eSprite::setScrollRect(int32_t x, int32_t y, int32_t w, int32_t h,
 ** Function name:           scroll
 ** Description:             Scroll dx,dy pixels, positive right,down, negative
 *left,up
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::scroll(int16_t dx, int16_t dy) {
     if (abs(dx) >= _sw || abs(dy) >= _sh) {
         fillRect(_sx, _sy, _sw, _sh, _scolor);
@@ -975,7 +981,7 @@ void TFT_eSprite::scroll(int16_t dx, int16_t dy) {
 /***************************************************************************************
 ** Function name:           fillSprite
 ** Description:             Fill the whole sprite with defined colour
-*************************************************************************************x*/
+***************************************************************************************/
 void TFT_eSprite::fillScreen(uint32_t color) {
     fillSprite(color);
 }
