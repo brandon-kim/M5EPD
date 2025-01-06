@@ -90,21 +90,16 @@ shown in Figure 1. The use of a white image in the transition from 4-bit to
 typedef enum               //             Typical
 {                          //   Ghosting  Update Time  Usage
     UPDATE_MODE_INIT = 0,  // * N/A       2000ms       Display initialization,
-    UPDATE_MODE_DU   = 1,  //   Low       260ms        Monochrome menu, text
-                           //   input, and touch screen input
-    UPDATE_MODE_GC16 = 2,  // * Very Low  450ms        High quality images
-    UPDATE_MODE_GL16 =
-        3,  // * Medium    450ms        Text with white background
-    UPDATE_MODE_GLR16 =
-        4,  //   Low       450ms        Text with white background
-    UPDATE_MODE_GLD16 =
-        5,  //   Low       450ms        Text and graphics with white background
-    UPDATE_MODE_DU4 =
-        6,  // * Medium    120ms        Fast page flipping at reduced contrast
-    UPDATE_MODE_A2 = 7,  //   Medium    290ms        Anti-aliased text in menus
-                         //   / touch and screen input
-    UPDATE_MODE_NONE = 8
-} m5epd_update_mode_t;  // The ones marked with * are more commonly used
+    UPDATE_MODE_DU   ,    // 1  //   Low       260ms        Monochrome menu, text input, and touch screen input
+    UPDATE_MODE_GC16,   //2  // * Very Low  450ms        High quality images
+    UPDATE_MODE_GL16,   //3  // * Medium    450ms        Text with white background
+    UPDATE_MODE_GLR16,  //4  //   Low       450ms        Text with white background
+    UPDATE_MODE_GLD16,  //5  //   Low       450ms        Text and graphics with white background
+    UPDATE_MODE_DU4,    //6  // * Medium    120ms        Fast page flipping at reduced contrast
+    UPDATE_MODE_A2,     //7  //   Medium    290ms        Anti-aliased text in menus/touch and screen input
+    UPDATE_MODE_NONE,   //8
+} m5epd_update_mode_t;  
+// The ones marked with * are more commonly used
 
 class M5EPD_Driver {
    public:
