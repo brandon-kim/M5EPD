@@ -3,6 +3,8 @@
 
 #include <Wire.h>
 
+#define I2C_BM8563_DEFAULT_ADDRESS  0x51
+
 typedef struct RTC_Time {
     int8_t hour;
     int8_t min;
@@ -27,12 +29,10 @@ typedef struct RTC_Date {
 
 class BM8563 {
    public:
-    BM8563();
+    BM8563(uint8_t deviceAddress = I2C_BM8563_DEFAULT_ADDRESS, TwoWire &i2cPort = Wire);
 
     void begin(void);
-    void writeReg(uint8_t reg, uint8_t data);
-    uint8_t readReg(uint8_t reg);
-    void getTime(void);
+    bool getVoltLow();
 
     int setTime(const rtc_time_t *time);
     int setDate(const rtc_date_t *date);
@@ -46,13 +46,17 @@ class BM8563 {
     void clearIRQ();
     void disableIRQ();
 
+    void writeReg(uint8_t reg, uint8_t data);
+    uint8_t readReg(uint8_t reg);
+
    private:
-    void DataMask();
+
     uint8_t Bcd2ToByte(uint8_t Value);
     uint8_t ByteToBcd2(uint8_t Value);
 
    private:
-    uint8_t trdata[7];
+    TwoWire *_i2cPort;
+    int _deviceAddress;
 };
 
 #endif
