@@ -49,7 +49,7 @@ void M5EPD::begin(bool touchEnable, bool SDEnable, bool SerialEnable,
 
     if (SDEnable == true) {
         SPI.begin(M5EPD_SCK_PIN, M5EPD_MISO_PIN, M5EPD_MOSI_PIN, M5EPD_SD_CS_PIN);
-        SD.begin(4, SPI, 20000000);
+        SD.begin(M5EPD_SD_CS_PIN, SPI, 20000000);
     }
 
     if (touchEnable == true) {

@@ -8,11 +8,8 @@ m5epd_err_t __epdret__;
     }
 
 M5EPD_Driver::M5EPD_Driver(int8_t spi_index) {
-    if (spi_index > 0 && spi_index < 4) {
-        _epd_spi = new SPIClass(spi_index);
-    } else {
-        _epd_spi = new SPIClass(VSPI);
-    }
+    _epd_spi = SPI;
+    
     _pin_cs   = -1;
     _pin_busy = -1;
     _pin_sck  = -1;
@@ -29,12 +26,12 @@ M5EPD_Driver::M5EPD_Driver(int8_t spi_index) {
 }
 
 M5EPD_Driver::~M5EPD_Driver() {
-    delete _epd_spi;
+    ;
 }
 
 m5epd_err_t M5EPD_Driver::begin(int8_t sck, int8_t mosi, int8_t miso, int8_t cs,
                                 int8_t busy, int8_t rst) {
-    _epd_spi->begin(sck, miso, mosi, -1);
+    _epd_spi.begin(sck, miso, mosi, -1);
     _pin_cs   = cs;
     _pin_busy = busy;
     _pin_sck  = sck;
@@ -124,13 +121,13 @@ m5epd_err_t M5EPD_Driver::Clear(bool init) {
     if (_is_reverse) {
         for (uint32_t x = 0; x < ((M5EPD_PANEL_W * M5EPD_PANEL_H) >> 2); x++) {
             digitalWrite(_pin_cs, 0);
-            _epd_spi->write32(0x00000000);
+            _epd_spi.write32(0x00000000);
             digitalWrite(_pin_cs, 1);
         }
     } else {
         for (uint32_t x = 0; x < ((M5EPD_PANEL_W * M5EPD_PANEL_H) >> 2); x++) {
             digitalWrite(_pin_cs, 0);
-            _epd_spi->write32(0x0000FFFF);
+            _epd_spi.write32(0x0000FFFF);
             digitalWrite(_pin_cs, 1);
         }
     }
@@ -209,7 +206,7 @@ m5epd_err_t M5EPD_Driver::WritePartGram4bpp(uint16_t x, uint16_t y, uint16_t w,
             word = gram[pos] << 8 | gram[pos + 1];
 
             digitalWrite(_pin_cs, 0);
-            _epd_spi->write32(word);
+            _epd_spi.write32(word);
             digitalWrite(_pin_cs, 1);
             pos += 2;
         }
@@ -219,7 +216,7 @@ m5epd_err_t M5EPD_Driver::WritePartGram4bpp(uint16_t x, uint16_t y, uint16_t w,
             word = 0xFFFF - word;
 
             digitalWrite(_pin_cs, 0);
-            _epd_spi->write32(word);
+            _epd_spi.write32(word);
             digitalWrite(_pin_cs, 1);
             pos += 2;
         }
@@ -278,7 +275,7 @@ m5epd_err_t M5EPD_Driver::FillPartGram4bpp(uint16_t x, uint16_t y, uint16_t w,
     CHECK(SetArea(x, y, w, h));
     for (uint32_t x = 0; x < ((w * h) >> 2); x++) {
         digitalWrite(_pin_cs, 0);
-        _epd_spi->write32(data);
+        _epd_spi.write32(data);
         digitalWrite(_pin_cs, 1);
     }
     CHECK(WriteCommand(IT8951_TCON_LD_IMG_END));
@@ -435,9 +432,9 @@ m5epd_err_t M5EPD_Driver::SetArea(uint16_t x, uint16_t y, uint16_t w,
  */
 void M5EPD_Driver::WriteGramData(uint16_t data) {
     digitalWrite(_pin_cs, 0);
-    _epd_spi->write32(data);
-    // _epd_spi->write16(0x0000);
-    // _epd_spi->write16(data);
+    _epd_spi.write32(data);
+    // _epd_spi.write16(0x0000);
+    // _epd_spi.write16(data);
     digitalWrite(_pin_cs, 1);
 }
 
@@ -513,15 +510,15 @@ void M5EPD_Driver::ResetDriver(void) {
 }
 
 void M5EPD_Driver::StartSPI(uint32_t freq) {
-    _epd_spi->beginTransaction(SPISettings(freq, MSBFIRST, SPI_MODE0));
+    _epd_spi.beginTransaction(SPISettings(freq, MSBFIRST, SPI_MODE0));
 }
 
 void M5EPD_Driver::StartSPI(void) {
-    _epd_spi->beginTransaction(SPISettings(_spi_freq, MSBFIRST, SPI_MODE0));
+    _epd_spi.beginTransaction(SPISettings(_spi_freq, MSBFIRST, SPI_MODE0));
 }
 
 void M5EPD_Driver::EndSPI(void) {
-    _epd_spi->endTransaction();
+    _epd_spi.endTransaction();
 }
 
 m5epd_err_t M5EPD_Driver::WaitBusy(uint32_t timeout) {
@@ -541,9 +538,9 @@ m5epd_err_t M5EPD_Driver::WaitBusy(uint32_t timeout) {
 m5epd_err_t M5EPD_Driver::WriteCommand(uint16_t cmd) {
     CHECK(WaitBusy());
     digitalWrite(_pin_cs, 0);
-    _epd_spi->write16(0x6000);
+    _epd_spi.write16(0x6000);
     CHECK(WaitBusy());
-    _epd_spi->write16(cmd);
+    _epd_spi.write16(cmd);
     digitalWrite(_pin_cs, 1);
 
     return M5EPD_OK;
@@ -552,9 +549,9 @@ m5epd_err_t M5EPD_Driver::WriteCommand(uint16_t cmd) {
 m5epd_err_t M5EPD_Driver::WriteWord(uint16_t data) {
     CHECK(WaitBusy());
     digitalWrite(_pin_cs, 0);
-    _epd_spi->write16(0x0000);
+    _epd_spi.write16(0x0000);
     CHECK(WaitBusy());
-    _epd_spi->write16(data);
+    _epd_spi.write16(data);
     digitalWrite(_pin_cs, 1);
 
     return M5EPD_OK;
@@ -564,15 +561,15 @@ m5epd_err_t M5EPD_Driver::ReadWords(uint16_t *buf, uint32_t length) {
     // uint16_t dummy;
     CHECK(WaitBusy());
     digitalWrite(_pin_cs, 0);
-    _epd_spi->write16(0x1000);
+    _epd_spi.write16(0x1000);
     CHECK(WaitBusy());
 
     // dummy
-    _epd_spi->transfer16(0);
+    _epd_spi.transfer16(0);
     CHECK(WaitBusy());
 
     for (size_t i = 0; i < length; i++) {
-        buf[i] = _epd_spi->transfer16(0);
+        buf[i] = _epd_spi.transfer16(0);
     }
 
     digitalWrite(_pin_cs, 1);

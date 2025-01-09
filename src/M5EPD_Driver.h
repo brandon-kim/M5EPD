@@ -135,9 +135,6 @@ class M5EPD_Driver {
     };
     void ResetUpdateCount(void);
     m5epd_err_t CheckAFSR(void);
-    SPIClass *GetSPI(void) {
-        return _epd_spi;
-    }
     void SetColorReverse(bool is_reverse);
 
     m5epd_err_t Active(void);
@@ -160,7 +157,7 @@ class M5EPD_Driver {
     void EndSPI(void);
 
    private:
-    SPIClass *_epd_spi;
+    SPIClass &_epd_spi = SPI;
     int8_t _pin_cs, _pin_busy, _pin_sck, _pin_mosi, _pin_miso, _pin_rst;
     uint32_t _spi_freq;
     uint8_t _direction, _rotate;
