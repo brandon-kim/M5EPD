@@ -5,15 +5,29 @@ BM8563::BM8563(uint8_t deviceAddress, TwoWire &i2cPort) {
   _i2cPort = &i2cPort;
 }
 
-static uint8_t reason;
 void BM8563::begin(void) {
-    _i2cPort->beginTransmission(_deviceAddress);
-    _i2cPort->write(0x00);
-    _i2cPort->write(0x00);
-    _i2cPort->write(0x00);
-    _i2cPort->endTransmission();    
-    //_i2cPort->begin(21, 22);
+    Wire.begin();
+    writeReg(0x00, 0x00);
+    writeReg(0x01, 0x00);
+    writeReg(0x0D, 0x00);
 }
+
+void BM8563::writeReg(uint8_t reg, uint8_t data) {
+    _i2cPort->beginTransmission(_deviceAddress);
+    _i2cPort->write(reg);
+    _i2cPort->write(data);
+    _i2cPort->endTransmission();
+}
+
+uint8_t BM8563::readReg(uint8_t reg) {
+    _i2cPort->beginTransmission(_deviceAddress);
+    _i2cPort->write(reg);
+    _i2cPort->endTransmission();
+    _i2cPort->requestFrom(_deviceAddress, 1);
+    return _i2cPort->read();
+}
+
+
 
 uint8_t BM8563::Bcd2ToByte(uint8_t Value) {
     uint8_t tmp = 0;
@@ -110,22 +124,6 @@ int BM8563::setDate(const rtc_date_t *date) {
     _i2cPort->endTransmission();
     return 1;
 }
-
-void BM8563::writeReg(uint8_t reg, uint8_t data) {
-    _i2cPort->beginTransmission(_deviceAddress);
-    _i2cPort->write(reg);
-    _i2cPort->write(data);
-    _i2cPort->endTransmission();
-}
-
-uint8_t BM8563::readReg(uint8_t reg) {
-    _i2cPort->beginTransmission(_deviceAddress);
-    _i2cPort->write(reg);
-    _i2cPort->endTransmission();
-    _i2cPort->requestFrom(_deviceAddress, 1);
-    return _i2cPort->read();
-}
-
 
 int BM8563::setAlarmIRQ(int afterSeconds) {
     uint8_t reg_value = 0;

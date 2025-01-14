@@ -56,7 +56,9 @@ void M5EPD::begin(bool touchEnable, bool SDEnable, bool SerialEnable,
         if (TP.begin( M5EPD_I2C_SDA_PIN, M5EPD_I2C_SCL_PIN, M5EPD_TOUCH_ISR_PIN) != ESP_OK) {
             log_e("Touch pad initialization failed.");
         }
-    } else if (I2CEnable == true) {
+    } 
+    
+    if (I2CEnable == true) {
         Wire.begin( M5EPD_I2C_SDA_PIN, M5EPD_I2C_SCL_PIN, (uint32_t)400000U);
     }
 
